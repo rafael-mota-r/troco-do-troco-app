@@ -13,19 +13,19 @@ class MeasureUnit(Enum):
 class Ingredient:
     def __init__(
             self,
-            name:str,
-            unit:MeasureUnit,
-            quantity:Decimal,
-            total_cost:Decimal,
-            id:str=None
+            name: str,
+            unit: MeasureUnit,
+            quantity: Decimal,
+            total_cost: Decimal,
+            id: str = None
     ):
         #Validações - Ingrediente
         if not name or name.strip() == '':
             raise ValueError('Ingredient name cannot be empty')
-        if unit is None:
-            raise ValueError(f'Unit {unit} is not valid')
-        if quantity < 0:
-            raise ValueError(f'Quantity {quantity} is not valid')
+        if not isinstance(unit, MeasureUnit):
+            raise TypeError("unit must be a MeasureUnit")
+        if quantity <= 0:
+            raise ValueError(f"Quantity {quantity} is not valid")
         if total_cost < 0:
             raise ValueError(f'Cost per unit {total_cost} is not valid')
         if id is None:
@@ -38,12 +38,15 @@ class Ingredient:
         self.total_cost = total_cost
         self.cost_per_unit = total_cost / quantity
 
-    def calculate_cost(self, quantity_used):
-        #Calcula o custo por cada unidade utilizada na receita.
-        return self.cost_per_unit*quantity_used
+    def calculate_cost(self, quantity_used: Decimal) -> Decimal:
+        if not isinstance(quantity_used, Decimal):
+            raise TypeError("quantity_used must be a Decimal")
+        if quantity_used <= 0:
+            raise ValueError("quantity_used must be greater than zero")
+
+        return self.cost_per_unit * quantity_used
 
     def to_dict(self) -> dict:
-    # Converte pra um dict para salvar no DB
         return {
             "id" : self.id,
             "name" : self.name,
@@ -54,7 +57,6 @@ class Ingredient:
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Ingredient':
-        #Carrega objetos a partir de um dict
         return cls(
             id = data['id'],
             name = data['name'],
