@@ -2,7 +2,6 @@ from decimal import Decimal
 from typing import List
 import uuid
 from .ingredient import Ingredient
-from .product import Product
 
 class RecipeItem:
     def __init__(
