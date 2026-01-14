@@ -1,12 +1,10 @@
 from decimal import Decimal
-from .recipe import Recipe
 
 class ProductRecipe:
-    def __init__(self, recipe : Recipe, ratio : Decimal = Decimal("1")):
-        if not isinstance(recipe, Recipe):
-            raise TypeError("recipe must be an instance of Recipe")
+    def __init__(self, recipe_id:str, product_id:str , ratio : Decimal = Decimal("1")):
         if ratio <= 0:
             raise ValueError("ratio must be greater than 0")
 
-        self.recipe : Recipe = recipe
-        self.ratio : Decimal = ratio
+        self.recipe_id = recipe_id
+        self.product_id = product_id
+        self.ratio = ratio
